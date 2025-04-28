@@ -1,26 +1,30 @@
-# Connect to Binance Futures Testnet using the provided API Key and Secret Key
-from binance.client import Client
-import sys  # to allow program exit on failure
+import ccxt
 
-# Binance Futures Testnet API credentials (replace with your own if needed)
-api_key = "96fa5c2fb6f5931c253bf0605417b72befbd6b5bd298284433c8dedcadd149e"
-api_secret = "601a2bd0c8cf65fde57027a6a6e00f5814938e200efff03c1a62b5eb10695a1"
+# Your Binance Testnet API keys (from your screenshot)
+api_key = '96fa5c2fb8f5931c253bf0605417b72befbd6b5bd298284433c86dacddd149e'
+api_secret = '601a2bd0c8cf65fde57027a4a6e00f58149308200efff03c1a62b5eb10695a1'
 
-# Initialize the Binance Client for Futures
-client = Client(api_key, api_secret)
-# Set the base URL to Binance Futures Testnet 
-client.FUTURES_URL = "https://testnet.binancefuture.com/fapi"
+# Connect to Binance Futures Testnet
+exchange = ccxt.binance({
+    'apiKey': api_key,
+    'secret': api_secret,
+    'options': {
+        'defaultType': 'future'
+    }
+})
 
-# Test the connection by fetching account balance or system status
-try:
-    # Attempt to retrieve the futures account balance (requires valid API keys)
-    account_balance = client.futures_account_balance()
-    # If no exception is raised up to this point, the connection was successful
-    print("Connection successful!")
-except Exception as e:
-    # If an error occurs (e.g., invalid key, network issue), output the error message
-    print(f"Connection failed: {e}")
-    sys.exit(1)  # Exit the program if connection fails (optional)
+exchange.set_sandbox_mode(True)  # Activate testnet mode
 
-# ... (Continue with the rest of the trading bot logic below)
+def test_connection():
+    try:
+        balance = exchange.fetch_balance()
+        print("Bot Connected Successfully!")
+        print("Your Balance Snapshot:")
+        print(balance)
+    except Exception as e:
+        print("Error connecting to Binance Futures:", str(e))
+
+if __name__ == "__main__":
+    test_connection()
+
 
